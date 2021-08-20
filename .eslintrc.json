@@ -49,6 +49,9 @@
     "eol-last": [
       "error",
       "always"
+    ],
+    "no-unreachable": [
+      "warn"
     ]
   }
 }
