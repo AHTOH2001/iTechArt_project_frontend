@@ -4,8 +4,15 @@ import 'antd/dist/antd.css'
 import {useState} from 'react'
 
 const LogIn = () => {
-    const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [form] = Form.useForm()
+    const {getFieldsError, getFieldError, isFieldTouched, validateFields} = form
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+    const [isFormErrorHidden, setIsFormErrorHidden] = useState(true)
+    const [formError, setFormError] = useState('')
+    const [usernameError, setUsernameError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
+
 
     const onFinish = (values) => {
         fetch('http://localhost:8000/api/token/', {
@@ -14,9 +21,11 @@ const LogIn = () => {
             headers: {'Content-Type': 'application/json'},
         })
             .then(res => {
-                console.log(res)
                 if (res.status === 401) {
-                    console.log(401)
+                    res.json().then(jsonRes => {
+                        setFormError(jsonRes['detail'])
+                        setIsFormErrorHidden(false)
+                    })
                 } else {
                     return res.json()
                 }
@@ -27,14 +36,20 @@ const LogIn = () => {
 
 
     const onValuesChange = (changedValues, allValues) => {
-
-        for (let valueName in allValues) {
-            if (!allValues[valueName]) {
-                setIsButtonDisabled(true)
-                return
-            }
-        }
-        setIsButtonDisabled(false)
+        setTimeout(() => {
+            setIsFormErrorHidden(true)
+            // https://stackoverflow.com/questions/56278830/how-to-know-when-all-fields-are-validated-values-added-in-ant-design-form
+            setUsernameError(isFieldTouched('username') && Boolean(getFieldError('username').length))
+            setPasswordError(isFieldTouched('password') && Boolean(getFieldError('password').length))
+            validateFields()
+                .then(values => {
+                    setIsButtonDisabled(false)
+                })
+                .catch(info => {
+                    setIsButtonDisabled(true)
+                })
+            console.log('getFieldsError()', getFieldsError())
+        }, 0)
     }
 
 
@@ -55,8 +70,20 @@ const LogIn = () => {
             onValuesChange={onValuesChange}
         >
             <Form.Item
+                name='form error'
+                hidden={isFormErrorHidden}
+                wrapperCol={{
+                    offset: 8,
+                    span: 16,
+                }}
+            >
+                <span className="ant-form-item-explain ant-form-item-explain-error">{formError}</span>
+            </Form.Item>
+            <Form.Item
                 label="Username"
                 name="username"
+                validateStatus={usernameError ? 'error' : ''}
+                help={usernameError ? null : ''}
                 rules={[
                     {
                         required: true,
@@ -70,6 +97,8 @@ const LogIn = () => {
             <Form.Item
                 label="Password"
                 name="password"
+                validateStatus={passwordError ? 'error' : ''}
+                help={passwordError ? null : ''}
                 rules={[
                     {
                         required: true,
