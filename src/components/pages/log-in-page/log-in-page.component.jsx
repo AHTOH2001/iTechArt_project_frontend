@@ -4,14 +4,7 @@ import LogIn from '../../log-in/log-in.component'
 import 'antd/dist/antd.css'
 
 class LogInPage extends React.Component {
-    constructor(props) {
-        super(props)
 
-        this.state = {
-            jwt_access: '',
-            jwt_refresh: ''
-        }
-    }
 
     render() {
         return (
@@ -23,5 +16,6 @@ class LogInPage extends React.Component {
         )
     }
 }
+
 
 export default LogInPage

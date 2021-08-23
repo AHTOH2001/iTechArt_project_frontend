@@ -2,10 +2,15 @@ import React from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
+import {connect} from 'react-redux'
+import {setCurrentTokens} from '../../redux/JWT/jwt.actions'
 
-const LogIn = () => {
+
+const LogIn = (props) => {
+    const {setCurrentTokens} = props
+
     const [form] = Form.useForm()
-    const {getFieldsError, getFieldError, isFieldTouched, validateFields} = form
+    const {getFieldError, isFieldTouched, validateFields} = form
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [isFormErrorHidden, setIsFormErrorHidden] = useState(true)
@@ -20,35 +25,38 @@ const LogIn = () => {
             body: JSON.stringify(values),
             headers: {'Content-Type': 'application/json'},
         })
-            .then(res => {
-                if (res.status === 401) {
-                    res.json().then(jsonRes => {
+            .then(resp => {
+                if (resp.status === 401) {
+                    resp.json().then(jsonRes => {
                         setFormError(jsonRes['detail'])
                         setIsFormErrorHidden(false)
                     })
+                    throw new Error(`HTTP error! status: ${resp.status}`)
                 } else {
-                    return res.json()
+                    return resp.json()
                 }
             })
-            .then(jsonRes => console.log('success: ', jsonRes))
+            .then(jsonRes => {
+                setCurrentTokens(jsonRes)
+                console.log('success: ', jsonRes)
+            })
             .catch(error => console.error('catch: ', error))
     }
 
 
-    const onValuesChange = (changedValues, allValues) => {
+    const onValuesChange = () => {
         setTimeout(() => {
             setIsFormErrorHidden(true)
             // https://stackoverflow.com/questions/56278830/how-to-know-when-all-fields-are-validated-values-added-in-ant-design-form
             setUsernameError(isFieldTouched('username') && Boolean(getFieldError('username').length))
             setPasswordError(isFieldTouched('password') && Boolean(getFieldError('password').length))
             validateFields()
-                .then(values => {
+                .then(() => {
                     setIsButtonDisabled(false)
                 })
-                .catch(info => {
+                .catch(() => {
                     setIsButtonDisabled(true)
                 })
-            console.log('getFieldsError()', getFieldsError())
         }, 0)
     }
 
@@ -123,4 +131,8 @@ const LogIn = () => {
     )
 }
 
-export default LogIn
+const mapDispatchToProps = dispatch => ({
+    setCurrentTokens: tokens => dispatch(setCurrentTokens(tokens))
+})
+
+export default connect(null, mapDispatchToProps)(LogIn)

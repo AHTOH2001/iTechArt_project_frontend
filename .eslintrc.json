@@ -5,7 +5,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:react-redux/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,7 +16,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react",
+    "react-redux"
   ],
   "settings": {
     "react": {
@@ -52,6 +54,9 @@
     ],
     "no-unreachable": [
       "warn"
+    ],
+    "react/prop-types": [
+      "off"
     ]
   }
 }

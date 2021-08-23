@@ -1,7 +1,8 @@
-const INITIAL_STATE = {}
+import jwtReducer from './JWT/jwt.reducer'
 
-const rootReducer = (state = INITIAL_STATE, action) => {
-    return state
-}
+import {combineReducers} from 'redux'
 
-export default rootReducer
+
+export default combineReducers({
+    jwt: jwtReducer
+})
