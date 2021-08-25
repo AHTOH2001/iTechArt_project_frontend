@@ -1,13 +1,15 @@
+import axios from 'axios'
 import React from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {connect} from 'react-redux'
-import {setCurrentTokens} from '../../redux/JWT/jwt.actions'
+import {setCurrentToken} from '../../redux/JWT/jwt.actions'
+import Cookies from 'universal-cookie'
 
 
 const LogIn = (props) => {
-    const {setCurrentTokens} = props
+    const {setCurrentToken} = props
 
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
@@ -20,27 +22,27 @@ const LogIn = (props) => {
 
 
     const onFinish = (values) => {
-        fetch('http://localhost:8000/api/token/', {
-            method: 'POST',
-            body: JSON.stringify(values),
-            headers: {'Content-Type': 'application/json'},
-        })
+        const cookies = new Cookies()
+        console.log('coockies all:', cookies.getAll())
+        axios.post(
+            'http://localhost:8000/login/',
+            values,
+            {
+                withCredentials: true,
+                headers: {'X-CSRFToken': cookies.get('csrftoken')}
+            }
+        )
             .then(resp => {
-                if (resp.status === 401) {
-                    resp.json().then(jsonRes => {
-                        setFormError(jsonRes['detail'])
-                        setIsFormErrorHidden(false)
-                    })
-                    throw new Error(`HTTP error! status: ${resp.status}`)
-                } else {
-                    return resp.json()
+                setCurrentToken(resp.data['access'])
+                console.log('success: ', resp)
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 401) {
+                    setFormError(error.response.data['detail'])
+                    setIsFormErrorHidden(false)
                 }
+                console.error('catch: ', error)
             })
-            .then(jsonRes => {
-                setCurrentTokens(jsonRes)
-                console.log('success: ', jsonRes)
-            })
-            .catch(error => console.error('catch: ', error))
     }
 
 
@@ -58,6 +60,21 @@ const LogIn = (props) => {
                     setIsButtonDisabled(true)
                 })
         }, 0)
+    }
+
+    // should be done automatically when access token is outdated
+    const onClick = (e) => {
+        e.preventDefault()
+        const cookies = new Cookies()
+        axios.post('http://localhost:8000/refresh_token/', {}, {
+            withCredentials: true,
+            headers: {'X-CSRFToken': cookies.get('csrftoken')}
+        })
+            .then(resp => {
+                setCurrentToken(resp.data['access'])
+                console.log('success refresh:', resp)
+            })
+            .catch(error => console.error('error refresh:', error))
     }
 
 
@@ -127,12 +144,13 @@ const LogIn = (props) => {
                     Log in
                 </Button>
             </Form.Item>
+            <button onClick={onClick}>refresh</button>
         </Form>
     )
 }
 
 const mapDispatchToProps = dispatch => ({
-    setCurrentTokens: tokens => dispatch(setCurrentTokens(tokens))
+    setCurrentToken: tokens => dispatch(setCurrentToken(tokens))
 })
 
 export default connect(null, mapDispatchToProps)(LogIn)

@@ -1,13 +1,15 @@
+import SET_CURRENT_TOKEN from './jwt.types'
+
 const INITIAL_STATE = {
-    currentTokens: null
+    currentToken: null
 }
 
 const jwtReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-    case 'SET_CURRENT_TOKENS':
+    case SET_CURRENT_TOKEN:
         return {
             ...state,
-            currentTokens: action.payload
+            currentToken: action.payload
         }
     default:
         return state
