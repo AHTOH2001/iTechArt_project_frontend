@@ -1,15 +1,13 @@
-import axios from 'axios'
 import React from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {connect} from 'react-redux'
 import {setCurrentToken} from '../../redux/JWT/jwt.actions'
-import Cookies from 'universal-cookie'
+import {SmartRequest} from '../../utils/utils'
 
 
-const LogIn = (props) => {
-    const {setCurrentToken} = props
+const LogIn = () => {
 
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
@@ -22,26 +20,23 @@ const LogIn = (props) => {
 
 
     const onFinish = (values) => {
-        const cookies = new Cookies()
-        console.log('coockies all:', cookies.getAll())
-        axios.post(
+        SmartRequest.post(
+            //todo find out what to do with hard coded url
             'http://localhost:8000/login/',
-            values,
-            {
-                withCredentials: true,
-                headers: {'X-CSRFToken': cookies.get('csrftoken')}
-            }
+            values
         )
             .then(resp => {
-                setCurrentToken(resp.data['access'])
-                console.log('success: ', resp)
+                // to uncoment resolve todo in utils.js
+                // access_token = resp.data['access']
+                console.log('success on finish: ', resp)
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     setFormError(error.response.data['detail'])
                     setIsFormErrorHidden(false)
+                } else {
+                    console.error('catch on finish: ', error)
                 }
-                console.error('catch: ', error)
             })
     }
 
@@ -60,21 +55,6 @@ const LogIn = (props) => {
                     setIsButtonDisabled(true)
                 })
         }, 0)
-    }
-
-    // should be done automatically when access token is outdated
-    const onClick = (e) => {
-        e.preventDefault()
-        const cookies = new Cookies()
-        axios.post('http://localhost:8000/refresh_token/', {}, {
-            withCredentials: true,
-            headers: {'X-CSRFToken': cookies.get('csrftoken')}
-        })
-            .then(resp => {
-                setCurrentToken(resp.data['access'])
-                console.log('success refresh:', resp)
-            })
-            .catch(error => console.error('error refresh:', error))
     }
 
 
@@ -144,13 +124,12 @@ const LogIn = (props) => {
                     Log in
                 </Button>
             </Form.Item>
-            <button onClick={onClick}>refresh</button>
         </Form>
     )
 }
 
 const mapDispatchToProps = dispatch => ({
-    setCurrentToken: tokens => dispatch(setCurrentToken(tokens))
+    setCurrentToken: token => dispatch(setCurrentToken(token))
 })
 
 export default connect(null, mapDispatchToProps)(LogIn)
