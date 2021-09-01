@@ -5,7 +5,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:react-redux/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,7 +16,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react",
+    "react-redux"
   ],
   "settings": {
     "react": {
@@ -24,7 +26,7 @@
   },
   "rules": {
     "indent": [
-      "error",
+      "warn",
       4
     ],
     "linebreak-style": [
@@ -49,6 +51,12 @@
     "eol-last": [
       "error",
       "always"
+    ],
+    "no-unreachable": [
+      "warn"
+    ],
+    "react/prop-types": [
+      "off"
     ]
   }
 }
