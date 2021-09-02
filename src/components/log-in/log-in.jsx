@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {connect} from 'react-redux'
-import {setCurrentToken} from '../../redux/JWT/jwt.actions'
+import {log_in_user} from '../../redux/user/user.actions'
 import {SmartRequest} from '../../utils/utils'
 
 
-const LogIn = () => {
+const LogIn = ({log_in_user}) => {
 
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
@@ -19,6 +19,10 @@ const LogIn = () => {
     const [passwordError, setPasswordError] = useState(false)
 
 
+    useEffect(() => {
+        console.log('effect in log in.')
+    })
+
     const onFinish = (values) => {
         SmartRequest.post(
             //todo find out what to do with hard coded url
@@ -26,16 +30,17 @@ const LogIn = () => {
             values
         )
             .then(resp => {
-                // to uncoment resolve todo in utils.js
+                // to uncomment resolve todo in utils.js
                 // access_token = resp.data['access']
-                console.log('success on finish: ', resp)
+                log_in_user()
+                console.log('success on sign in: ', resp)
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     setFormError(error.response.data['detail'])
                     setIsFormErrorHidden(false)
                 } else {
-                    console.error('catch on finish: ', error)
+                    console.error('catch on sign in: ', error)
                 }
             })
     }
@@ -74,6 +79,7 @@ const LogIn = () => {
             onFinish={onFinish}
             onValuesChange={onValuesChange}
         >
+            <span>is auth in log in: {localStorage.getItem('isAuthorized')}</span>
             <Form.Item
                 name='form error'
                 hidden={isFormErrorHidden}
@@ -128,8 +134,7 @@ const LogIn = () => {
     )
 }
 
-const mapDispatchToProps = dispatch => ({
-    setCurrentToken: token => dispatch(setCurrentToken(token))
-})
+const mapDispatchToProps = {log_in_user}
+
 
 export default connect(null, mapDispatchToProps)(LogIn)

@@ -4,23 +4,19 @@ import LogIn from '../../log-in/log-in'
 import 'antd/dist/antd.css'
 import Header from '../../header/header'
 
-class LogInPage extends React.Component {
-
-
-    render() {
-        return (
-            <Layout className='log-in'>
-                <Header/>
-                <Layout.Content style={{padding: '10px'}}>
-                    <Row>
-                        <Col span={8}>
-                            <LogIn/>
-                        </Col>
-                    </Row>
-                </Layout.Content>
-            </Layout>
-        )
-    }
+const LogInPage = () => {
+    return (
+        <Layout className='log-in'>
+            <Header/>
+            <Layout.Content style={{padding: '10px'}}>
+                <Row>
+                    <Col span={8}>
+                        <LogIn/>
+                    </Col>
+                </Row>
+            </Layout.Content>
+        </Layout>
+    )
 }
 
 
