@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-import {log_in_user, log_out_user} from '../redux/user/user.actions'
+import {setCurrentUser} from '../redux/user/user.actions'
 import store from '../redux/store'
 
 // todo cannon make access token class field because I should install new eslint
@@ -9,7 +9,7 @@ let access_token = ''
 
 export class SmartRequest {
     static async refresh_token(cookies) {
-        if (localStorage.getItem('isAuthenticated') === 'true') {
+        if (localStorage.getItem('currentUser')) {
             await axios.post('http://localhost:8000/refresh_token/',
                 {},
                 {
@@ -18,14 +18,11 @@ export class SmartRequest {
                 })
                 .then(resp => {
                     access_token = resp.data['access']
-                    // localStorage.setItem('isAuthenticated', 'true')
-                    store.dispatch(log_in_user())
                     console.log('success refresh:', resp)
                 })
                 .catch(error => {
                     // todo redirect to sigin page
-                    // localStorage.setItem('isAuthenticated', 'false')
-                    store.dispatch(log_out_user())
+                    store.dispatch(setCurrentUser(null))
                     console.error('error refresh:', error)
                 })
         }

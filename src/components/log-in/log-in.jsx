@@ -3,11 +3,11 @@ import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {connect} from 'react-redux'
-import {log_in_user} from '../../redux/user/user.actions'
+import {setCurrentUser} from '../../redux/user/user.actions'
 import {SmartRequest} from '../../utils/utils'
 
 
-const LogIn = ({log_in_user}) => {
+const LogIn = ({setCurrentUser}) => {
 
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
@@ -32,8 +32,8 @@ const LogIn = ({log_in_user}) => {
             .then(resp => {
                 // to uncomment resolve todo in utils.js
                 // access_token = resp.data['access']
-                log_in_user()
-                console.log('success on sign in: ', resp)
+                setCurrentUser({username: values.username})
+                console.log('success on sign in: ', resp, values)
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
@@ -79,7 +79,6 @@ const LogIn = ({log_in_user}) => {
             onFinish={onFinish}
             onValuesChange={onValuesChange}
         >
-            <span>is auth in log in: {localStorage.getItem('isAuthorized')}</span>
             <Form.Item
                 name='form error'
                 hidden={isFormErrorHidden}
@@ -134,7 +133,9 @@ const LogIn = ({log_in_user}) => {
     )
 }
 
-const mapDispatchToProps = {log_in_user}
+const mapDispatchToProps = dispatch => ({
+    setCurrentUser: user => dispatch(setCurrentUser(user))
+})
 
 
 export default connect(null, mapDispatchToProps)(LogIn)

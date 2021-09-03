@@ -1,21 +1,15 @@
-import {LOG_IN} from './user.types'
-import {LOG_OUT} from './user.types'
+import {SET_CURRENT_USER} from './user.types'
 
 const INITIAL_STATE = {
-    isAuthenticated: false
+    currentUser: null
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-    case LOG_IN:
+    case SET_CURRENT_USER:
         return {
             ...state,
-            isAuthenticated: true
-        }
-    case LOG_OUT:
-        return {
-            ...state,
-            isAuthenticated: false
+            currentUser: action.payload
         }
     default:
         return state

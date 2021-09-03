@@ -1,21 +1,11 @@
-import {LOG_IN} from './user.types'
-import {LOG_OUT} from './user.types'
+import {SET_CURRENT_USER} from './user.types'
 
-export const log_in_user = () => {
-    localStorage.setItem('isAuthorized', 'true')
+export const setCurrentUser = user => {
+    localStorage.setItem('currentUser', JSON.stringify(user))
     return (
         {
-            type: LOG_IN
-        }
-    )
-}
-
-export const log_out_user = () => {
-    localStorage.removeItem('isAuthorized')
-    console.log('log out')
-    return (
-        {
-            type: LOG_OUT
+            type: SET_CURRENT_USER,
+            payload: user
         }
     )
 }
