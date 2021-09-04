@@ -2,15 +2,15 @@ import React, {useEffect} from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
-import {connect} from 'react-redux'
-import {setCurrentUser} from '../../redux/user/user.actions'
+import {useDispatch} from 'react-redux'
+import {setCurrentUserAsync} from '../../redux/user/user.actions'
 import {SmartRequest} from '../../utils/utils'
 
 
-const LogIn = ({setCurrentUser}) => {
-
+const LogIn = () => {
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
+    const dispatch = useDispatch()
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [isFormErrorHidden, setIsFormErrorHidden] = useState(true)
@@ -32,7 +32,7 @@ const LogIn = ({setCurrentUser}) => {
             .then(resp => {
                 // to uncomment resolve todo in utils.js
                 // access_token = resp.data['access']
-                setCurrentUser({username: values.username})
+                dispatch(setCurrentUserAsync({username: values.username}))
                 console.log('success on sign in: ', resp, values)
             })
             .catch(error => {
@@ -133,9 +133,5 @@ const LogIn = ({setCurrentUser}) => {
     )
 }
 
-const mapDispatchToProps = dispatch => ({
-    setCurrentUser: user => dispatch(setCurrentUser(user))
-})
 
-
-export default connect(null, mapDispatchToProps)(LogIn)
+export default LogIn
