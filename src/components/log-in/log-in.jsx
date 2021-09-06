@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
@@ -18,20 +18,16 @@ const LogIn = () => {
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
 
-
-    useEffect(() => {
-        console.log('effect in log in.')
-    })
-
     const onFinish = (values) => {
         SmartRequest.post(
-            //todo find out what to do with hard coded url
-            'http://localhost:8000/login/',
-            values
+            'login/',
+            values,
+            {},
+            false,
+            false
         )
             .then(resp => {
-                // to uncomment resolve todo in utils.js
-                // access_token = resp.data['access']
+                SmartRequest.setAccessToken(resp.data['access'])
                 dispatch(setCurrentUserAsync({username: values.username}))
                 console.log('success on sign in: ', resp, values)
             })

@@ -6,6 +6,7 @@ import ProfilePage from './components/pages/profile-page/profile-page'
 import HomePage from './components/pages/home-page/home-page'
 import {useDispatch, useSelector} from 'react-redux'
 import {setCurrentUserAsync} from './redux/user/user.actions'
+import {SmartRequest} from './utils/utils'
 
 
 const selectCurrentUser = state => state.user.currentUser
@@ -15,21 +16,28 @@ function App() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log('effect in app.')
-        if (JSON.stringify(currentUser) !== localStorage.getItem('currentUser'))
-            dispatch(setCurrentUserAsync(JSON.parse(localStorage.getItem('currentUser'))))
+        SmartRequest.get('profile/')
+            .then(resp => {
+                console.log('success in get profile:', resp)
+                const actualUser = resp.data
+                dispatch(setCurrentUserAsync(actualUser))
+            })
     })
+
+
     return (
-        <Switch>
-            <Route exact path='/log-in'>
-                {currentUser ? <Redirect to='/profile'/> :
-                    <LogInPage/>}
-            </Route>
-            <Route exact path='/' component={HomePage}/>
-            <Route exact path='/profile'>
-                {currentUser ? <ProfilePage/> : <Redirect to='/log-in'/>}
-            </Route>
-        </Switch>
+        <>
+            <Switch>
+                <Route exact path='/log-in'>
+                    {currentUser ? <Redirect to='/profile'/> :
+                        <LogInPage/>}
+                </Route>
+                <Route exact path='/' component={HomePage}/>
+                <Route exact path='/profile'>
+                    {currentUser ? <ProfilePage/> : <Redirect to='/log-in'/>}
+                </Route>
+            </Switch>
+        </>
     )
 }
 
