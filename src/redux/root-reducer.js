@@ -1,8 +1,8 @@
-import jwtReducer from './JWT/jwt.reducer'
+import userReducer from './user/user.reducer'
 
 import {combineReducers} from 'redux'
 
 
 export default combineReducers({
-    jwt: jwtReducer
+    user: userReducer
 })

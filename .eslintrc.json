@@ -57,6 +57,9 @@
     ],
     "react/prop-types": [
       "off"
+    ],
+    "react-redux/prefer-separate-component-file": [
+      "off"
     ]
   }
 }

@@ -2,15 +2,15 @@ import React from 'react'
 import {Form, Input, Button} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
-import {connect} from 'react-redux'
-import {setCurrentToken} from '../../redux/JWT/jwt.actions'
+import {useDispatch} from 'react-redux'
+import {setCurrentUserAsync} from '../../redux/user/user.actions'
 import {SmartRequest} from '../../utils/utils'
 
 
 const LogIn = () => {
-
     const [form] = Form.useForm()
     const {getFieldError, isFieldTouched, validateFields} = form
+    const dispatch = useDispatch()
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [isFormErrorHidden, setIsFormErrorHidden] = useState(true)
@@ -18,24 +18,25 @@ const LogIn = () => {
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
 
-
     const onFinish = (values) => {
         SmartRequest.post(
-            //todo find out what to do with hard coded url
-            'http://localhost:8000/login/',
-            values
+            'login/',
+            values,
+            {},
+            false,
+            false
         )
             .then(resp => {
-                // to uncoment resolve todo in utils.js
-                // access_token = resp.data['access']
-                console.log('success on finish: ', resp)
+                SmartRequest.setAccessToken(resp.data['access'])
+                dispatch(setCurrentUserAsync({username: values.username}))
+                console.log('success on sign in: ', resp, values)
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
                     setFormError(error.response.data['detail'])
                     setIsFormErrorHidden(false)
                 } else {
-                    console.error('catch on finish: ', error)
+                    console.error('catch on sign in: ', error)
                 }
             })
     }
@@ -128,8 +129,5 @@ const LogIn = () => {
     )
 }
 
-const mapDispatchToProps = dispatch => ({
-    setCurrentToken: token => dispatch(setCurrentToken(token))
-})
 
-export default connect(null, mapDispatchToProps)(LogIn)
+export default LogIn
