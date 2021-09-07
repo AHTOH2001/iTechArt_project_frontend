@@ -5,6 +5,7 @@ import LogInPage from './components/pages/log-in-page/log-in-page'
 import ProfilePage from './components/pages/profile-page/profile-page'
 import HomePage from './components/pages/home-page/home-page'
 import {useDispatch, useSelector} from 'react-redux'
+import SignUpPage from './components/pages/sign-up-page/sign-up-page'
 import {setCurrentUserAsync} from './redux/user/user.actions'
 import {SmartRequest} from './utils/utils'
 
@@ -29,12 +30,14 @@ function App() {
         <>
             <Switch>
                 <Route exact path='/log-in'>
-                    {currentUser ? <Redirect to='/profile'/> :
-                        <LogInPage/>}
+                    {currentUser ? <Redirect to='/profile'/> : <LogInPage/>}
                 </Route>
                 <Route exact path='/' component={HomePage}/>
                 <Route exact path='/profile'>
                     {currentUser ? <ProfilePage/> : <Redirect to='/log-in'/>}
+                </Route>
+                <Route exact path='/sign-up'>
+                    {currentUser ? <Redirect to='/profile'/> : <SignUpPage/>}
                 </Route>
             </Switch>
         </>

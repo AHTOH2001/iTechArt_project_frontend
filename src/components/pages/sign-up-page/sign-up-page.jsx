@@ -1,23 +1,23 @@
 import {Row, Col, Layout} from 'antd'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import LogIn from '../../log-in/log-in'
+import SignUp from '../../sign-up/sign-up'
 import 'antd/dist/antd.css'
 import Header from '../../header/header'
 
-const LogInPage = () => {
+const SignUpPage = () => {
     return (
         <Layout className='log-in'>
             <Header justify='end' content={[
-                <Link to='/sign-up' key={1}>
-                    Create an account
+                <Link to='/log-in' key={1}>
+                    Log in
                 </Link>
             ]}
             />
             <Layout.Content style={{padding: '10px'}}>
                 <Row>
                     <Col span={8}>
-                        <LogIn/>
+                        <SignUp/>
                     </Col>
                 </Row>
             </Layout.Content>
@@ -26,4 +26,4 @@ const LogInPage = () => {
 }
 
 
-export default LogInPage
+export default SignUpPage

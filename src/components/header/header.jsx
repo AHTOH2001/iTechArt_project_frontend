@@ -1,17 +1,18 @@
-import {Menu} from 'antd'
+import {Menu, Row} from 'antd'
 import React from 'react'
 import './header.css'
 import {Layout} from 'antd'
 import {Link} from 'react-router-dom'
 
-const Header = ({content}) => {
+const Header = ({content, justify}) => {
     return (
         <Layout.Header className="header">
             <Link to='/' className="logo"/>
-            <div/>
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[]}>
-                {content.map(e => <Menu.Item key={e.key}>{e}</Menu.Item>)}
-            </Menu>
+            <Row justify={justify}>
+                <Menu theme="dark" mode="horizontal">
+                    {content.map(e => <Menu.Item key={e.key}>{e}</Menu.Item>)}
+                </Menu>
+            </Row>
         </Layout.Header>
     )
 }
