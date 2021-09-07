@@ -1,19 +1,20 @@
 import React from 'react'
-import {Form, Input, Button} from 'antd'
+import {Form, Input, Button, message} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {SmartRequest} from '../../utils/utils'
+import {useHistory} from 'react-router-dom'
 
 
 const SignUp = () => {
     const [form] = Form.useForm()
-    const {getFieldError, validateFields, fields} = form
+    const {getFieldError, validateFields} = form
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [formError, setFormError] = useState('')
     const [fieldsErrors, setFieldsErrors] = useState({})
+    const history = useHistory()
 
     const onFinish = (values) => {
-        console.log('fields:', fields)
         setFormError('')
         SmartRequest.post(
             'signup/',
@@ -22,12 +23,13 @@ const SignUp = () => {
             false,
             false
         )
-            .then(resp => {
-                alert('success')
-                console.log('success on sign up: ', resp, values)
+            .then(() => {
+                message.success('Successful creating account')
+                history.push('/log-in')
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
+                    setIsButtonDisabled(true)
                     if (typeof error.response.data['detail'] !== 'object') {
                         setFormError(error.response.data['detail'])
                     } else {
@@ -49,7 +51,6 @@ const SignUp = () => {
                 resFieldsErrors[val] = getFieldError(val)
             }
             setFieldsErrors(resFieldsErrors)
-            console.log('resFieldsErrors', resFieldsErrors)
             validateFields()
                 .then(() => {
                     if (Object.values(resFieldsErrors).filter(e => e.length).length === 0)
@@ -102,7 +103,7 @@ const SignUp = () => {
                     },
                 ]}
             >
-                <Input/>
+                <Input autoComplete="username"/>
             </Form.Item>
 
             <Form.Item
@@ -117,7 +118,7 @@ const SignUp = () => {
                     },
                 ]}
             >
-                <Input/>
+                <Input type="email" autoComplete="email"/>
             </Form.Item>
             <Form.Item
                 label="Password"
@@ -131,7 +132,7 @@ const SignUp = () => {
                     },
                 ]}
             >
-                <Input.Password/>
+                <Input.Password autoComplete="current-password"/>
             </Form.Item>
 
             <Form.Item

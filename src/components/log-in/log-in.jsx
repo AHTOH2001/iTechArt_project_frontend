@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Input, Button} from 'antd'
+import {Form, Input, Button, message} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
 import {useDispatch} from 'react-redux'
@@ -29,7 +29,7 @@ const LogIn = () => {
             .then(resp => {
                 SmartRequest.setAccessToken(resp.data['access'])
                 dispatch(setCurrentUserAsync({username: values.username}))
-                console.log('success on sign in: ', resp, values)
+                message.success('Successful log in')
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {

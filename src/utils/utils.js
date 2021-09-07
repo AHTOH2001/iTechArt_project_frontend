@@ -22,6 +22,9 @@ export class SmartRequest {
             })
             .catch(error => {
                 console.error('error in refresh:', error.response)
+                if (error.response === undefined) {
+                    throw Error('Back end does not send the response, maybe you forget to run the back end server?')
+                }
                 if (error.response.data['detail'] === 'Token is invalid or expired') {
                     console.log('set current user to null because refresh token is invalid')
                     store.dispatch(setCurrentUserAsync(null))
