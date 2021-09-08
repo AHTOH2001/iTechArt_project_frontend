@@ -6,11 +6,11 @@ import store from '../redux/store'
 // todo cannon make access token class field because I should install new eslint
 // https://coderoad.ru/34244888/%D0%9A%D0%B0%D0%BA-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D1%8C-ESLint-%D0%B4%D0%BB%D1%8F-%D1%80%D0%B0%D0%B7%D1%80%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2-%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0-fat-arrow
 let access_token = ''
-const host = 'http://localhost:8000'
+const backend_host = 'http://localhost:8000'
 
 export class SmartRequest {
     static async refresh_token(cookies) {
-        await axios.post(`${host}/refresh_token/`,
+        await axios.post(`${backend_host}/refresh_token/`,
             {},
             {
                 withCredentials: true,
@@ -25,8 +25,8 @@ export class SmartRequest {
                 if (error.response === undefined) {
                     throw Error('Back end does not send the response, maybe you forget to run the back end server?')
                 }
-                if (error.response.data['detail'] === 'Token is invalid or expired') {
-                    console.log('set current user to null because refresh token is invalid')
+                if (error.response.status === 401) {
+                    console.log('set current user to null because refresh token is missing, expired or invalid')
                     store.dispatch(setCurrentUserAsync(null))
                     throw error
                 }
@@ -44,11 +44,11 @@ export class SmartRequest {
             await this.refresh_token(cookies)
         }
 
-        url = url.replace(host, '')
+        url = url.replace(backend_host, '')
         if (!url.startsWith('/')) {
             url = `/${url}`
         }
-        url = `${host}${url}`
+        url = `${backend_host}${url}`
 
         config = {
             ...config,
@@ -56,7 +56,7 @@ export class SmartRequest {
             headers: {
                 ...config.headers,
                 'X-CSRFToken': cookies.get('csrftoken'),
-                'AUTHORIZATION': access_token ? 'Bearer ' + access_token : ''
+                'AUTHORIZATION': access_token && shouldRefresh ? 'Bearer ' + access_token : ''
             }
         }
 
@@ -69,7 +69,7 @@ export class SmartRequest {
 
         return axios.post(url, data, config)
             .catch((error) => {
-                if (error.response.data['detail'] === 'Given token not valid for any token type') {
+                if (error.response.status === 403) {
                     access_token = ''
                     if (shouldTryAgain) {
                         return this.post(url, data, config, false)
@@ -84,7 +84,7 @@ export class SmartRequest {
 
         return axios.get(url, config)
             .catch((error) => {
-                if (error.response.data['detail'] === 'Given token not valid for any token type') {
+                if (error.response.status === 403) {
                     access_token = ''
                     if (shouldTryAgain) {
                         return this.get(url, config, false)
