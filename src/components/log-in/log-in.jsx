@@ -35,7 +35,7 @@ const LogIn = () => {
                         console.log('success in get profile:', resp)
                         const actualUser = resp.data
                         dispatch(setCurrentUserAsync(actualUser))
-                        message.success('Successful log in')
+                        message.success('Successfully logged in')
                         history.push('/profile')
                     })
             })
