@@ -31,8 +31,8 @@ const Sider = () => {
     return (
         <Layout.Sider collapsible collapsed={collapsed} onCollapse={onCollapse} className='sider'>
             <Link to='/' className="logo"/>
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                <SubMenu key="sub1" icon={<UserOutlined/>} title={currentUser.username}>
+            <Menu theme="dark" mode="inline">
+                <SubMenu key="sub1" icon={<UserOutlined/>} title={currentUser.user.username}>
                     <Menu.Item key="1" icon={<LogoutOutlined/>} onClick={onLogOut}>
                         Log out
                     </Menu.Item>
