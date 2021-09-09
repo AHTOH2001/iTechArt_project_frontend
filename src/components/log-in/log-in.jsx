@@ -5,6 +5,7 @@ import {useState} from 'react'
 import {useDispatch} from 'react-redux'
 import {setCurrentUserAsync} from '../../redux/user/user.actions'
 import {SmartRequest} from '../../utils/utils'
+import {useHistory} from 'react-router-dom'
 
 
 const LogIn = () => {
@@ -17,6 +18,7 @@ const LogIn = () => {
     const [formError, setFormError] = useState('')
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
+    const history = useHistory()
 
     const onFinish = (values) => {
         SmartRequest.post(
@@ -28,8 +30,14 @@ const LogIn = () => {
         )
             .then(resp => {
                 SmartRequest.setAccessToken(resp.data['access'])
-                dispatch(setCurrentUserAsync({username: values.username}))
-                message.success('Successful log in')
+                SmartRequest.get('profile/')
+                    .then(resp => {
+                        console.log('success in get profile:', resp)
+                        const actualUser = resp.data
+                        dispatch(setCurrentUserAsync(actualUser))
+                        message.success('Successfully logged in')
+                        history.push('/profile')
+                    })
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
@@ -62,7 +70,6 @@ const LogIn = () => {
     return (
         <Form
             form={form}
-            name="log in"
             labelCol={{
                 span: 8,
             }}

@@ -94,6 +94,22 @@ export class SmartRequest {
             })
     }
 
+    static async patch(url, data = {}, config = {}, shouldTryAgain = true, shouldRefresh = true) {
+        [url, config] = await this.prepareData(url, config, shouldRefresh)
+
+
+        return axios.patch(url, data, config)
+            .catch((error) => {
+                if (error.response.status === 403) {
+                    access_token = ''
+                    if (shouldTryAgain) {
+                        return this.patch(url, data, config, false)
+                    }
+                }
+                throw error
+            })
+    }
+
     static setAccessToken(token) {
         access_token = token
     }

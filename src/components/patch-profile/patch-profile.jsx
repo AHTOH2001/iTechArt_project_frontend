@@ -1,31 +1,34 @@
-import React from 'react'
-import {Form, Input, Button, message} from 'antd'
-import 'antd/dist/antd.css'
-import {useState} from 'react'
-import {SmartRequest} from '../../utils/utils'
+import {Button, Form, Input, message} from 'antd'
+import React, {useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
+import {setCurrentUserAsync} from '../../redux/user/user.actions'
+import {SmartRequest} from '../../utils/utils'
 
+const selectCurrentUser = state => state.user.currentUser
 
-const SignUp = () => {
+const PatchProfile = () => {
     const [form] = Form.useForm()
     const {getFieldError, validateFields} = form
-    const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false)
     const [formError, setFormError] = useState('')
     const [fieldsErrors, setFieldsErrors] = useState({})
+    const currentUser = useSelector(selectCurrentUser)
+    const dispatch = useDispatch()
     const history = useHistory()
+
 
     const onFinish = (values) => {
         setFormError('')
-        SmartRequest.post(
-            'signup/',
+        SmartRequest.patch(
+            'profile/',
             {user: values},
-            {},
-            false,
-            false
+            {}
         )
-            .then(() => {
-                message.success('Successfully created account')
-                history.push('/log-in')
+            .then(resp => {
+                const actualUser = resp.data
+                dispatch(setCurrentUserAsync(actualUser))
+                message.success('Successfully updated account info')
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
@@ -36,7 +39,7 @@ const SignUp = () => {
                         setFieldsErrors(error.response.data['detail']['user'])
                     }
                 } else {
-                    console.error('catch on sign up: ', error)
+                    console.error('catch on profile patch: ', error)
                 }
             })
     }
@@ -91,6 +94,7 @@ const SignUp = () => {
                 <span className="ant-form-item-explain ant-form-item-explain-error">{formError}</span>
             </Form.Item>
             <Form.Item
+                initialValue={currentUser.user.username}
                 label="Username"
                 name="username"
                 validateStatus={fieldsErrors['username'] && fieldsErrors['username'].length ? 'error' : ''}
@@ -106,6 +110,7 @@ const SignUp = () => {
             </Form.Item>
 
             <Form.Item
+                initialValue={currentUser.user.email}
                 label="Email"
                 name="email"
                 validateStatus={fieldsErrors['email'] && fieldsErrors['email'].length ? 'error' : ''}
@@ -119,20 +124,6 @@ const SignUp = () => {
             >
                 <Input type="email" autoComplete="email"/>
             </Form.Item>
-            <Form.Item
-                label="Password"
-                name="password"
-                validateStatus={fieldsErrors['password'] && fieldsErrors['password'].length ? 'error' : ''}
-                help={fieldsErrors['password'] && fieldsErrors['password'].length ? fieldsErrors['password'][0] : ''}
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your password!',
-                    },
-                ]}
-            >
-                <Input.Password autoComplete="current-password"/>
-            </Form.Item>
 
             <Form.Item
                 wrapperCol={{
@@ -141,12 +132,11 @@ const SignUp = () => {
                 }}
             >
                 <Button disabled={isButtonDisabled} type="primary" htmlType="submit">
-                    Sign up
+                    Update info
                 </Button>
             </Form.Item>
         </Form>
     )
 }
 
-
-export default SignUp
+export default PatchProfile

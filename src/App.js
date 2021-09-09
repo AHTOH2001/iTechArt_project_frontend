@@ -33,7 +33,7 @@ function App() {
                     {currentUser ? <Redirect to='/profile'/> : <LogInPage/>}
                 </Route>
                 <Route exact path='/' component={HomePage}/>
-                <Route exact path='/profile'>
+                <Route path='/profile'>
                     {currentUser ? <ProfilePage/> : <Redirect to='/log-in'/>}
                 </Route>
                 <Route exact path='/sign-up'>
