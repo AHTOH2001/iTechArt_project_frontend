@@ -1,27 +1,31 @@
-import {Button, Form, Input, message} from 'antd'
-import React, {useState} from 'react'
-import {SmartRequest} from '../../utils/utils'
+import React from 'react'
+import {Form, Input, Button, message} from 'antd'
+import 'antd/dist/antd.css'
+import {useState} from 'react'
+import {SmartRequest} from '../../../utils/utils'
+import {useHistory} from 'react-router-dom'
 
 
-const ChangePassword = () => {
+const SignUp = () => {
     const [form] = Form.useForm()
-    const {getFieldError, validateFields, resetFields} = form
+    const {getFieldError, validateFields} = form
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [formError, setFormError] = useState('')
     const [fieldsErrors, setFieldsErrors] = useState({})
-
+    const history = useHistory()
 
     const onFinish = (values) => {
         setFormError('')
-        SmartRequest.patch(
-            'change-password/',
-            values,
-            {}
+        SmartRequest.post(
+            'signup/',
+            {user: values},
+            {},
+            false,
+            false
         )
-            .then(resp => {
-                console.log('success in change password:', resp)
-                message.success('Successfully changed password')
-                resetFields()
+            .then(() => {
+                message.success('Successfully created account')
+                history.push('/log-in')
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
@@ -29,10 +33,10 @@ const ChangePassword = () => {
                     if (typeof error.response.data['detail'] !== 'object') {
                         setFormError(error.response.data['detail'])
                     } else {
-                        setFieldsErrors(error.response.data['detail'])
+                        setFieldsErrors(error.response.data['detail']['user'])
                     }
                 } else {
-                    console.error('catch on password change: ', error)
+                    console.error('catch on sign up: ', error)
                 }
             })
     }
@@ -87,33 +91,49 @@ const ChangePassword = () => {
                 <span className="ant-form-item-explain ant-form-item-explain-error">{formError}</span>
             </Form.Item>
             <Form.Item
-                label="Old password"
-                name="password_old"
-                validateStatus={fieldsErrors['password_old'] && fieldsErrors['password_old'].length ? 'error' : ''}
-                help={fieldsErrors['password_old'] && fieldsErrors['password_old'].length ? fieldsErrors['password_old'][0] : ''}
+                label="Username"
+                name="username"
+                validateStatus={fieldsErrors['username'] && fieldsErrors['username'].length ? 'error' : ''}
+                help={fieldsErrors['username'] && fieldsErrors['username'].length ? fieldsErrors['username'][0] : ''}
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your old password!',
+                        message: 'Please input your username!',
                     },
                 ]}
             >
-                <Input.Password autoComplete="off"/>
+                <Input autoComplete="username"/>
+            </Form.Item>
+
+            <Form.Item
+                label="Email"
+                name="email"
+                validateStatus={fieldsErrors['email'] && fieldsErrors['email'].length ? 'error' : ''}
+                help={fieldsErrors['email'] && fieldsErrors['email'].length ? fieldsErrors['email'][0] : ''}
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your email!',
+                    },
+                ]}
+            >
+                <Input type="email" autoComplete="email"/>
             </Form.Item>
             <Form.Item
-                label="New password"
-                name="password_new"
-                validateStatus={fieldsErrors['password_new'] && fieldsErrors['password_new'].length ? 'error' : ''}
-                help={fieldsErrors['password_new'] && fieldsErrors['password_new'].length ? fieldsErrors['password_new'][0] : ''}
+                label="Password"
+                name="password"
+                validateStatus={fieldsErrors['password'] && fieldsErrors['password'].length ? 'error' : ''}
+                help={fieldsErrors['password'] && fieldsErrors['password'].length ? fieldsErrors['password'][0] : ''}
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your new password!',
+                        message: 'Please input your password!',
                     },
                 ]}
             >
-                <Input.Password autoComplete="off"/>
+                <Input.Password autoComplete="current-password"/>
             </Form.Item>
+
             <Form.Item
                 wrapperCol={{
                     offset: 8,
@@ -121,12 +141,12 @@ const ChangePassword = () => {
                 }}
             >
                 <Button disabled={isButtonDisabled} type="primary" htmlType="submit">
-                    Change password
+                    Sign up
                 </Button>
             </Form.Item>
-
         </Form>
     )
 }
 
-export default ChangePassword
+
+export default SignUp

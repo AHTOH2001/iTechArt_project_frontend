@@ -1,7 +1,7 @@
 import {Row, Col, Layout} from 'antd'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import LogIn from '../../log-in/log-in'
+import LogIn from '../../forms/log-in/log-in'
 import 'antd/dist/antd.css'
 import Header from '../../header/header'
 
@@ -18,6 +18,9 @@ const LogInPage = () => {
                 <Row>
                     <Col span={8}>
                         <LogIn/>
+                        <Col offset={8}>
+                            <Link to=''>Reset your password</Link>
+                        </Col>
                     </Col>
                 </Row>
             </Layout.Content>
