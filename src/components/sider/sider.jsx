@@ -2,7 +2,7 @@ import {
     UserOutlined,
     LogoutOutlined
 } from '@ant-design/icons'
-import {Layout, Menu} from 'antd'
+import {Layout, Menu, message} from 'antd'
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
@@ -25,6 +25,7 @@ const Sider = () => {
 
     const onLogOut = () => {
         dispatch(setCurrentUserAsync(null))
+        message.success('Successful log out')
     }
 
     return (
