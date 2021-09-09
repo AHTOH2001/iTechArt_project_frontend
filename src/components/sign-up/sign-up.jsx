@@ -68,7 +68,6 @@ const SignUp = () => {
     return (
         <Form
             form={form}
-            name="log in"
             labelCol={{
                 span: 8,
             }}

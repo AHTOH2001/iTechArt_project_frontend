@@ -70,7 +70,6 @@ const LogIn = () => {
     return (
         <Form
             form={form}
-            name="log in"
             labelCol={{
                 span: 8,
             }}

@@ -10,7 +10,7 @@ const Settings = () => {
             <Col span={8}>
                 <PatchProfile/>
             </Col>
-            <Col span={8} offset={7}>
+            <Col span={8} offset={4}>
                 <ChangePassword/>
             </Col>
         </Row>
