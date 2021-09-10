@@ -2,28 +2,24 @@ import {Button, Form, Input, message} from 'antd'
 import React, {useState} from 'react'
 import {SmartRequest} from '../../../utils/utils'
 
-
-const ChangePassword = () => {
+const ResetPasswordForm = ({setVisible}) => {
     const [form] = Form.useForm()
-    const {getFieldError, validateFields, resetFields} = form
+    const {getFieldError, validateFields} = form
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [formError, setFormError] = useState('')
     const [fieldsErrors, setFieldsErrors] = useState({})
-
+    const [isValidating, setIsValidating] = useState(false)
 
     const onFinish = (values) => {
-        setFormError('')
-        SmartRequest.patch(
-            'change-password/',
-            values,
-            {}
-        )
-            .then(resp => {
-                console.log('success in change password:', resp)
-                message.success('Successfully changed password')
-                resetFields()
+        setIsValidating(true)
+        SmartRequest.post('reset-password/', values, {}, false, false)
+            .then(() => {
+                message.success('Mail for resetting password has been sent to your email', 5)
+                setIsValidating(false)
+                setTimeout(() => setVisible(false), 1000)
             })
             .catch(error => {
+                setIsValidating(false)
                 if (error.response && error.response.status === 400) {
                     setIsButtonDisabled(true)
                     if (typeof error.response.data['detail'] !== 'object') {
@@ -32,11 +28,12 @@ const ChangePassword = () => {
                         setFieldsErrors(error.response.data['detail'])
                     }
                 } else {
-                    console.error('catch on password change: ', error)
+                    console.error('Error in reset password:', error)
                 }
-            })
-    }
 
+            })
+
+    }
 
     const onValuesChange = (changedValues) => {
         setTimeout(() => {
@@ -64,15 +61,14 @@ const ChangePassword = () => {
     return (
         <Form
             form={form}
-            labelCol={{
-                span: 8,
-            }}
+            onFinish={onFinish}
+            style={{padding: '20px', alignContent: 'center'}}
             wrapperCol={{
                 span: 16,
             }}
-            onFinish={onFinish}
             onValuesChange={onValuesChange}
         >
+            <p>Enter the email you used to register</p>
             <Form.Item
                 name='form error'
                 hidden={!formError}
@@ -84,46 +80,26 @@ const ChangePassword = () => {
                 <span className="ant-form-item-explain ant-form-item-explain-error">{formError}</span>
             </Form.Item>
             <Form.Item
-                label="Old password"
-                name="password_old"
-                validateStatus={fieldsErrors['password_old'] && fieldsErrors['password_old'].length ? 'error' : ''}
-                help={fieldsErrors['password_old'] && fieldsErrors['password_old'].length ? fieldsErrors['password_old'][0] : ''}
+                name="email"
+                validateStatus={isValidating ? 'validating' : fieldsErrors['email'] && fieldsErrors['email'].length ? 'error' : ''}
+                help={fieldsErrors['email'] && fieldsErrors['email'].length ? fieldsErrors['email'][0] : ''}
+                hasFeedback
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your old password!',
+                        message: 'Please input your email!',
                     },
                 ]}
             >
-                <Input.Password autoComplete="off"/>
+                <Input placeholder="Email" type="email" autoComplete="email"/>
             </Form.Item>
-            <Form.Item
-                label="New password"
-                name="password_new"
-                validateStatus={fieldsErrors['password_new'] && fieldsErrors['password_new'].length ? 'error' : ''}
-                help={fieldsErrors['password_new'] && fieldsErrors['password_new'].length ? fieldsErrors['password_new'][0] : ''}
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input your new password!',
-                    },
-                ]}
-            >
-                <Input.Password autoComplete="off"/>
-            </Form.Item>
-            <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-            >
+            <Form.Item>
                 <Button disabled={isButtonDisabled} type="primary" htmlType="submit">
-                    Change password
+                    Request
                 </Button>
             </Form.Item>
-
         </Form>
     )
 }
 
-export default ChangePassword
+export default ResetPasswordForm

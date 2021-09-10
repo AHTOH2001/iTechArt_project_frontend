@@ -76,9 +76,6 @@ const LogIn = () => {
             wrapperCol={{
                 span: 16,
             }}
-            initialValues={{
-                remember: true,
-            }}
             onFinish={onFinish}
             onValuesChange={onValuesChange}
         >

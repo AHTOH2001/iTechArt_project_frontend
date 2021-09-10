@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import LogIn from '../../forms/log-in/log-in'
 import 'antd/dist/antd.css'
 import Header from '../../header/header'
+import ResetPasswordModal from '../../modals/reset-password-modal/reset-password-modal'
 
 const LogInPage = () => {
     return (
@@ -19,7 +20,7 @@ const LogInPage = () => {
                     <Col span={8}>
                         <LogIn/>
                         <Col offset={8}>
-                            <Link to=''>Reset your password</Link>
+                            <ResetPasswordModal/>
                         </Col>
                     </Col>
                 </Row>
