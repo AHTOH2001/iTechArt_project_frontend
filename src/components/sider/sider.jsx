@@ -2,7 +2,8 @@ import {
     UserOutlined,
     LogoutOutlined,
     HomeOutlined,
-    SettingOutlined
+    SettingOutlined,
+    PlusOutlined,
 } from '@ant-design/icons'
 import {Layout, Menu, message} from 'antd'
 import React, {useState} from 'react'
@@ -46,6 +47,9 @@ const Sider = () => {
                 </SubMenu>
                 <Menu.Item key="3" icon={<HomeOutlined/>} onClick={() => history.push('/profile')}>
                     Home
+                </Menu.Item>
+                <Menu.Item key="4" icon={<PlusOutlined/>} onClick={() => history.push('/profile/add-product')}>
+                    Add profuct
                 </Menu.Item>
             </Menu>
         </Layout.Sider>

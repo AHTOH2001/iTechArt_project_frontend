@@ -3,6 +3,7 @@ import {Layout} from 'antd'
 import './profile-page.css'
 import Sider from '../../sider/sider'
 import {Route, Switch} from 'react-router-dom'
+import AddProduct from './profile-contents/add-product'
 import Settings from './profile-contents/settings'
 
 const ProfilePage = () => {
@@ -14,6 +15,7 @@ const ProfilePage = () => {
                 <Layout.Content style={{padding: '10px'}}>
                     <Switch>
                         <Route path='/profile/settings' component={Settings}/>
+                        <Route path='/profile/add-product' component={AddProduct}/>
                         <Route path='/profile'>Default content</Route>
                     </Switch>
                 </Layout.Content>
