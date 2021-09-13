@@ -1,11 +1,10 @@
-import React from 'react'
-import {Form, Input, Button, message} from 'antd'
+import {Button, Form, Input, message} from 'antd'
 import 'antd/dist/antd.css'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useDispatch} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import {setCurrentUserAsync} from '../../../redux/user/user.actions'
 import {SmartRequest} from '../../../utils/utils'
-import {useHistory} from 'react-router-dom'
 
 
 const LogIn = () => {

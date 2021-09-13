@@ -1,10 +1,10 @@
-import React from 'react'
 import {Layout} from 'antd'
-import './profile-page.css'
-import Sider from '../../sider/sider'
+import React from 'react'
 import {Route, Switch} from 'react-router-dom'
+import Sider from '../../sider/sider'
 import AddProduct from './profile-contents/add-product'
 import Settings from './profile-contents/settings'
+import './profile-page.css'
 
 const ProfilePage = () => {
     return (

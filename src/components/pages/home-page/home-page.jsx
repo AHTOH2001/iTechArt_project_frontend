@@ -1,8 +1,8 @@
-import React from 'react'
 import {Layout} from 'antd'
-import './home-page.css'
+import React from 'react'
 import {Link} from 'react-router-dom'
 import Header from '../../header/header'
+import './home-page.css'
 
 const HomePage = () => (
     <Layout className="home">

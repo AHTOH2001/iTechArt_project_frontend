@@ -1,9 +1,7 @@
-import React from 'react'
-import {Form, Input, Button, message, Select, InputNumber, Row, Col} from 'antd'
+import {Button, Form, Input, InputNumber, message, Select} from 'antd'
 import 'antd/dist/antd.css'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {SmartRequest} from '../../../utils/utils'
-import {useHistory} from 'react-router-dom'
 
 const AddProductForm = () => {
     const [form] = Form.useForm()
@@ -23,7 +21,6 @@ const AddProductForm = () => {
                 message.success('Successfully added product')
                 resetFields()
                 setIsButtonDisabled(true)
-                // history.push('/log-in')
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {

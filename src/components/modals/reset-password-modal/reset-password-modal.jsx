@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
 import {Modal} from 'antd'
+import React, {useState} from 'react'
 import ResetPasswordForm from '../../forms/reset-password-form/reset-password-form'
 
 

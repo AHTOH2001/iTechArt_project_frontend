@@ -1,8 +1,7 @@
-import {Menu, Row} from 'antd'
+import {Layout, Menu, Row} from 'antd'
 import React from 'react'
-import './header.css'
-import {Layout} from 'antd'
 import {Link} from 'react-router-dom'
+import './header.css'
 
 const Header = ({content, justify}) => {
     return (

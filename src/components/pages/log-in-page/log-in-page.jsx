@@ -1,8 +1,8 @@
-import {Row, Col, Layout} from 'antd'
+import {Col, Layout, Row} from 'antd'
+import 'antd/dist/antd.css'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import LogIn from '../../forms/log-in/log-in'
-import 'antd/dist/antd.css'
 import Header from '../../header/header'
 import ResetPasswordModal from '../../modals/reset-password-modal/reset-password-modal'
 
