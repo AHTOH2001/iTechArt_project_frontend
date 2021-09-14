@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, Input, Button, message} from 'antd'
 import 'antd/dist/antd.css'
 import {useState} from 'react'
-import {SmartRequest} from '../../utils/utils'
+import {SmartRequest} from '../../../utils/utils'
 import {useHistory} from 'react-router-dom'
 
 
@@ -73,9 +73,6 @@ const SignUp = () => {
             }}
             wrapperCol={{
                 span: 16,
-            }}
-            initialValues={{
-                remember: true,
             }}
             onFinish={onFinish}
             onValuesChange={onValuesChange}

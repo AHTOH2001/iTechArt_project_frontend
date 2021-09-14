@@ -1,6 +1,6 @@
 import {Button, Form, Input, message} from 'antd'
 import React, {useState} from 'react'
-import {SmartRequest} from '../../utils/utils'
+import {SmartRequest} from '../../../utils/utils'
 
 
 const ChangePassword = () => {
@@ -69,9 +69,6 @@ const ChangePassword = () => {
             }}
             wrapperCol={{
                 span: 16,
-            }}
-            initialValues={{
-                remember: true,
             }}
             onFinish={onFinish}
             onValuesChange={onValuesChange}

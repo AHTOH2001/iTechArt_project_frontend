@@ -1,7 +1,7 @@
 import {Row, Col, Layout} from 'antd'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import SignUp from '../../sign-up/sign-up'
+import SignUp from '../../forms/sign-up/sign-up'
 import 'antd/dist/antd.css'
 import Header from '../../header/header'
 

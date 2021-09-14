@@ -1,7 +1,7 @@
 import {Col, Row} from 'antd'
 import React from 'react'
-import ChangePassword from '../../../change-password/change-password'
-import PatchProfile from '../../../patch-profile/patch-profile'
+import ChangePassword from '../../../forms/change-password/change-password'
+import PatchProfile from '../../../forms/patch-profile/patch-profile'
 
 
 const Settings = () => {

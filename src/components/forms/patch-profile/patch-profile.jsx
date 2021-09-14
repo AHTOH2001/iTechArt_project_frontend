@@ -2,8 +2,8 @@ import {Button, Form, Input, message} from 'antd'
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
-import {setCurrentUserAsync} from '../../redux/user/user.actions'
-import {SmartRequest} from '../../utils/utils'
+import {setCurrentUserAsync} from '../../../redux/user/user.actions'
+import {SmartRequest} from '../../../utils/utils'
 
 const selectCurrentUser = state => state.user.currentUser
 
@@ -76,9 +76,6 @@ const PatchProfile = () => {
             }}
             wrapperCol={{
                 span: 16,
-            }}
-            initialValues={{
-                remember: true,
             }}
             onFinish={onFinish}
             onValuesChange={onValuesChange}
