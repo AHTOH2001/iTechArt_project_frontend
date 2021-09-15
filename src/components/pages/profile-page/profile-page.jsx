@@ -1,9 +1,10 @@
-import React from 'react'
 import {Layout} from 'antd'
-import './profile-page.css'
-import Sider from '../../sider/sider'
+import React from 'react'
 import {Route, Switch} from 'react-router-dom'
+import Sider from '../../sider/sider'
+import AddProduct from './profile-contents/add-product'
 import Settings from './profile-contents/settings'
+import './profile-page.css'
 
 const ProfilePage = () => {
     return (
@@ -14,6 +15,7 @@ const ProfilePage = () => {
                 <Layout.Content style={{padding: '10px'}}>
                     <Switch>
                         <Route path='/profile/settings' component={Settings}/>
+                        <Route path='/profile/add-product' component={AddProduct}/>
                         <Route path='/profile'>Default content</Route>
                     </Switch>
                 </Layout.Content>

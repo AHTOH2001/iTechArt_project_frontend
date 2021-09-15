@@ -1,8 +1,8 @@
-import {Row, Col, Layout} from 'antd'
+import {Col, Layout, Row} from 'antd'
+import 'antd/dist/antd.css'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import SignUp from '../../forms/sign-up/sign-up'
-import 'antd/dist/antd.css'
 import Header from '../../header/header'
 
 const SignUpPage = () => {

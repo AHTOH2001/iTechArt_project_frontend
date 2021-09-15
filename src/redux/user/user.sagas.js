@@ -1,4 +1,4 @@
-import {put, takeEvery, call} from 'redux-saga/effects'
+import {call, put, takeEvery} from 'redux-saga/effects'
 import {SmartRequest} from '../../utils/utils'
 import store from '../store'
 import {setCurrentUser} from './user.actions'

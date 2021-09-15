@@ -1,9 +1,8 @@
-import React from 'react'
-import {Form, Input, Button, message} from 'antd'
+import {Button, Form, Input, message} from 'antd'
 import 'antd/dist/antd.css'
-import {useState} from 'react'
-import {SmartRequest} from '../../../utils/utils'
+import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
+import {SmartRequest} from '../../../utils/utils'
 
 
 const SignUp = () => {

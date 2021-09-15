@@ -1,16 +1,10 @@
-import {
-    UserOutlined,
-    LogoutOutlined,
-    HomeOutlined,
-    SettingOutlined
-} from '@ant-design/icons'
+import {HomeOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, UserOutlined,} from '@ant-design/icons'
 import {Layout, Menu, message} from 'antd'
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
 import {setCurrentUserAsync} from '../../redux/user/user.actions'
 import './sider.css'
-import {useHistory} from 'react-router-dom'
 
 
 const selectCurrentUser = state => state.user.currentUser
@@ -46,6 +40,9 @@ const Sider = () => {
                 </SubMenu>
                 <Menu.Item key="3" icon={<HomeOutlined/>} onClick={() => history.push('/profile')}>
                     Home
+                </Menu.Item>
+                <Menu.Item key="4" icon={<PlusOutlined/>} onClick={() => history.push('/profile/add-product')}>
+                    Add profuct
                 </Menu.Item>
             </Menu>
         </Layout.Sider>
