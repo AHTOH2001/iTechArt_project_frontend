@@ -1,6 +1,6 @@
 import {Button, Form, Input, InputNumber, message, Select} from 'antd'
 import 'antd/dist/antd.css'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {SmartRequest} from '../../../utils/utils'
 
 const AddProductForm = () => {
@@ -9,6 +9,20 @@ const AddProductForm = () => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [formError, setFormError] = useState('')
     const [fieldsErrors, setFieldsErrors] = useState({})
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        SmartRequest.get(
+            'categories/',
+            {}
+        )
+            .then(resp => {
+                setCategories(resp.data)
+            })
+            .catch(error => {
+                console.error('catch on getting categories:', error)
+            })
+    }, [JSON.stringify(categories)])
 
     const onFinish = (values) => {
         setFormError('')
@@ -94,16 +108,7 @@ const AddProductForm = () => {
                 ]}
             >
                 <Select allowClear>
-                    <Select.Option value="Hats">Hats</Select.Option>
-                    <Select.Option value="Unisex T-Shirts">Unisex T-Shirts</Select.Option>
-                    <Select.Option value="Women's T-Shirts">Womens T-Shirts</Select.Option>
-                    <Select.Option value="Long Sleeve Tees">Long Sleeve Tees</Select.Option>
-                    <Select.Option value="Hoodies">Hoodies</Select.Option>
-                    <Select.Option value="Sweatshirts">Sweatshirts</Select.Option>
-                    <Select.Option value="Tank Tops">Tank Tops</Select.Option>
-                    <Select.Option value="Socks">Socks</Select.Option>
-                    <Select.Option value="Face Masks">Face Masks</Select.Option>
-                    <Select.Option value="Other">Other</Select.Option>
+                    {categories.map(({id, title}) => <Select.Option key={id} value={title}>{title}</Select.Option>)}
                 </Select>
             </Form.Item>
             <Form.Item
